@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommonHall.Application\CommonHall.Application.csproj" />
+    <ProjectReference Include="..\CommonHall.Domain\CommonHall.Domain.csproj" />
   </ItemGroup>
 
 </Project>

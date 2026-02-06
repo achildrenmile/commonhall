@@ -6,6 +6,20 @@ namespace CommonHall.Application.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<User> Users { get; }
+    DbSet<UserGroup> UserGroups { get; }
+    DbSet<UserGroupMembership> UserGroupMemberships { get; }
+    DbSet<Space> Spaces { get; }
+    DbSet<SpaceAdministrator> SpaceAdministrators { get; }
+    DbSet<Page> Pages { get; }
+    DbSet<PageVersion> PageVersions { get; }
+    DbSet<NewsChannel> NewsChannels { get; }
+    DbSet<NewsArticle> NewsArticles { get; }
+    DbSet<Tag> Tags { get; }
+    DbSet<ArticleTag> ArticleTags { get; }
+    DbSet<Comment> Comments { get; }
+    DbSet<Reaction> Reactions { get; }
+    DbSet<StoredFile> StoredFiles { get; }
+    DbSet<FileCollection> FileCollections { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

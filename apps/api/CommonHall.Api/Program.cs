@@ -2,6 +2,7 @@ using CommonHall.Api.Extensions;
 using CommonHall.Api.Middleware;
 using CommonHall.Application;
 using CommonHall.Infrastructure;
+using CommonHall.Infrastructure.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,14 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
+
+// Seed database in development
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+    await seeder.SeedAsync();
+}
 
 // Configure middleware pipeline
 if (app.Environment.IsDevelopment())

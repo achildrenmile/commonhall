@@ -2,8 +2,9 @@ namespace CommonHall.Domain.Enums;
 
 public enum UserRole
 {
-    User = 0,
-    Manager = 1,
-    Admin = 2,
-    SuperAdmin = 3
+    Employee = 0,
+    Editor = 1,
+    SpaceAdmin = 2,
+    Admin = 3,
+    SuperAdmin = 4
 }

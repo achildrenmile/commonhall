@@ -1,6 +1,6 @@
 using CommonHall.Application.Interfaces;
-using CommonHall.Infrastructure.Data;
-using CommonHall.Infrastructure.Identity;
+using CommonHall.Domain.Entities;
+using CommonHall.Infrastructure.Persistence;
 using CommonHall.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +17,16 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         // Database
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<CommonHallDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                b => b.MigrationsAssembly(typeof(CommonHallDbContext).Assembly.FullName)));
 
         services.AddScoped<IApplicationDbContext>(provider =>
-            provider.GetRequiredService<ApplicationDbContext>());
+            provider.GetRequiredService<CommonHallDbContext>());
 
         // Identity
-        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -35,7 +35,7 @@ public static class DependencyInjection
                 options.Password.RequiredLength = 8;
                 options.User.RequireUniqueEmail = true;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<CommonHallDbContext>()
             .AddDefaultTokenProviders();
 
         // Redis
@@ -46,6 +46,9 @@ public static class DependencyInjection
                 ConnectionMultiplexer.Connect(redisConnection));
             services.AddScoped<ICacheService, RedisCacheService>();
         }
+
+        // Seeder
+        services.AddScoped<DbSeeder>();
 
         return services;
     }
