@@ -1,0 +1,131 @@
+# =============================================================================
+# CommonHall Editor Configuration
+# https://editorconfig.org
+# =============================================================================
+
+root = true
+
+# -----------------------------------------------------------------------------
+# Default settings for all files
+# -----------------------------------------------------------------------------
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# -----------------------------------------------------------------------------
+# C# files
+# -----------------------------------------------------------------------------
+[*.cs]
+indent_size = 4
+
+# C# formatting preferences
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+
+# .NET style preferences
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+# var preferences
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+
+# Expression-bodied members
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_constructors = false:suggestion
+csharp_style_expression_bodied_operators = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+csharp_style_expression_bodied_indexers = when_on_single_line:suggestion
+csharp_style_expression_bodied_accessors = when_on_single_line:suggestion
+
+# Naming conventions
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_style.underscore_prefix_style.capitalization = camel_case
+dotnet_naming_style.underscore_prefix_style.required_prefix = _
+
+# Private fields: _camelCase
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case.style = underscore_prefix_style
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# Public members: PascalCase
+dotnet_naming_rule.public_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.public_members_should_be_pascal_case.symbols = public_members
+dotnet_naming_rule.public_members_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_symbols.public_members.applicable_kinds = property, method, event
+dotnet_naming_symbols.public_members.applicable_accessibilities = public
+
+# -----------------------------------------------------------------------------
+# TypeScript / JavaScript files
+# -----------------------------------------------------------------------------
+[*.{ts,tsx,js,jsx,mjs,cjs}]
+indent_size = 2
+
+# -----------------------------------------------------------------------------
+# JSON files
+# -----------------------------------------------------------------------------
+[*.json]
+indent_size = 2
+
+# -----------------------------------------------------------------------------
+# YAML files
+# -----------------------------------------------------------------------------
+[*.{yml,yaml}]
+indent_size = 2
+
+# -----------------------------------------------------------------------------
+# XML and config files
+# -----------------------------------------------------------------------------
+[*.{xml,csproj,props,targets,config}]
+indent_size = 2
+
+# -----------------------------------------------------------------------------
+# Markdown files
+# -----------------------------------------------------------------------------
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# -----------------------------------------------------------------------------
+# Makefiles
+# -----------------------------------------------------------------------------
+[Makefile]
+indent_style = tab
+
+# -----------------------------------------------------------------------------
+# Shell scripts
+# -----------------------------------------------------------------------------
+[*.sh]
+indent_size = 2
+
+# -----------------------------------------------------------------------------
+# Docker files
+# -----------------------------------------------------------------------------
+[Dockerfile*]
+indent_size = 2
+
+[docker-compose*.yml]
+indent_size = 2
