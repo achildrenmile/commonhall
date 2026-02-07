@@ -10,12 +10,15 @@ public sealed class User : IdentityUser<Guid>, ISoftDeletable
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? AvatarUrl { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public string? Department { get; set; }
     public string? Location { get; set; }
     public string? JobTitle { get; set; }
     public string? Bio { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTimeOffset? LastLoginAt { get; set; }
+    public DateTimeOffset? HireDate { get; set; }
+    public DateTimeOffset? Birthday { get; set; }
     public string? PreferredLanguage { get; set; }
     public string? ExternalId { get; set; }
     public UserRole Role { get; set; } = UserRole.Employee;

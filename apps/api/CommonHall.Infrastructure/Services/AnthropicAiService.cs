@@ -103,9 +103,12 @@ public sealed class AnthropicAiService : IAiService
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(stream);
 
-        while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             var line = await reader.ReadLineAsync(cancellationToken);
+
+            if (line == null)
+                break;
 
             if (string.IsNullOrEmpty(line))
                 continue;
@@ -118,28 +121,34 @@ public sealed class AnthropicAiService : IAiService
             if (eventData == "[DONE]")
                 break;
 
-            try
+            var textValue = TryParseStreamEvent(eventData);
+            if (!string.IsNullOrEmpty(textValue))
             {
-                using var doc = JsonDocument.Parse(eventData);
-                var root = doc.RootElement;
-
-                if (root.TryGetProperty("type", out var typeVal) &&
-                    typeVal.GetString() == "content_block_delta" &&
-                    root.TryGetProperty("delta", out var delta) &&
-                    delta.TryGetProperty("text", out var text))
-                {
-                    var textValue = text.GetString();
-                    if (!string.IsNullOrEmpty(textValue))
-                    {
-                        yield return textValue;
-                    }
-                }
-            }
-            catch (JsonException)
-            {
-                // Skip malformed JSON
+                yield return textValue;
             }
         }
+    }
+
+    private static string? TryParseStreamEvent(string eventData)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(eventData);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("type", out var typeVal) &&
+                typeVal.GetString() == "content_block_delta" &&
+                root.TryGetProperty("delta", out var delta) &&
+                delta.TryGetProperty("text", out var text))
+            {
+                return text.GetString();
+            }
+        }
+        catch (JsonException)
+        {
+            // Skip malformed JSON
+        }
+        return null;
     }
 
     public async Task<ClassificationResult> ClassifyAsync(
