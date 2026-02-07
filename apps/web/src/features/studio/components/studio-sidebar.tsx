@@ -17,6 +17,7 @@ import {
   Send,
   Route,
   ClipboardList,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/lib/auth-store';
@@ -75,6 +76,12 @@ const navigation: NavItem[] = [
       { title: 'Surveys', href: '/studio/surveys' },
       { title: 'Forms', href: '/studio/forms' },
     ],
+  },
+  {
+    title: 'Analytics',
+    href: '/studio/analytics',
+    icon: BarChart3,
+    adminOnly: true,
   },
   {
     title: 'Users',

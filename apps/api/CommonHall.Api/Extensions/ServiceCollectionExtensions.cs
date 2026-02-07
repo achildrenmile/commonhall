@@ -1,6 +1,7 @@
 using System.Text;
 using CommonHall.Api.Services;
 using CommonHall.Application.Interfaces;
+using CommonHall.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.SignalR;
@@ -126,6 +127,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CurrentUserService>();
         services.AddScoped<ICurrentUserService>(sp => sp.GetRequiredService<CurrentUserService>());
         services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<CurrentUserService>());
+
+        // Analytics services
+        services.AddSingleton<TrackingEventChannel>();
+        services.AddHostedService<TrackingEventProcessor>();
+        services.AddScoped<IAnalyticsService, AnalyticsService>();
 
         return services;
     }

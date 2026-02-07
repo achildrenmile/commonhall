@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useNewsArticle } from '@/features/news';
 import {
@@ -10,10 +11,18 @@ import {
   RelatedArticles,
 } from '@/features/news';
 import { WidgetRenderer } from '@/features/pages/widgets';
+import { trackArticleView } from '@/lib/analytics';
 
 export default function ArticleDetailPage() {
   const params = useParams<{ slug: string }>();
   const { data: article, isLoading, error } = useNewsArticle(params.slug);
+
+  // Track article view
+  useEffect(() => {
+    if (article) {
+      trackArticleView(article.id, article.slug, article.title);
+    }
+  }, [article]);
 
   if (isLoading) {
     return <ArticleSkeleton />;

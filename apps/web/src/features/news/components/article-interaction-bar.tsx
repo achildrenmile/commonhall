@@ -11,6 +11,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import { useToggleReaction } from '../api';
+import { trackArticleLike } from '@/lib/analytics';
 
 interface ArticleInteractionBarProps {
   articleId: string;
@@ -32,6 +33,9 @@ export function ArticleInteractionBar({
   const toggleReaction = useToggleReaction(articleSlug);
 
   const handleLike = () => {
+    if (!hasLiked) {
+      trackArticleLike(articleId);
+    }
     toggleReaction.mutate();
   };
 
