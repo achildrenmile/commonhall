@@ -1,0 +1,254 @@
+# CommonHall Production Docker Compose - Small Profile
+# Optimized for servers with 4 CPU cores and 8-16 GB RAM
+# Usage: docker-compose -f docker-compose.prod.small.yml up -d
+
+services:
+  # ==========================================================================
+  # Reverse Proxy
+  # ==========================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: commonhall-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx-cache:/var/cache/nginx
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  # ==========================================================================
+  # Application Services
+  # ==========================================================================
+  api:
+    image: ${REGISTRY:-ghcr.io/your-org}/commonhall-api:${VERSION:-latest}
+    container_name: commonhall-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=commonhall;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      - Redis__ConnectionString=redis:6379
+      - Elasticsearch__Url=http://elasticsearch:9200
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=${JWT_ISSUER:-commonhall}
+      - Jwt__Audience=${JWT_AUDIENCE:-commonhall}
+      - Anthropic__ApiKey=${ANTHROPIC_API_KEY}
+      - Email__Provider=SendGrid
+      - Email__SendGridApiKey=${SENDGRID_API_KEY}
+      - Sms__Provider=Twilio
+      - Sms__TwilioAccountSid=${TWILIO_ACCOUNT_SID}
+      - Sms__TwilioAuthToken=${TWILIO_AUTH_TOKEN}
+      - Sms__TwilioPhoneNumber=${TWILIO_PHONE_NUMBER}
+      - Storage__Provider=${STORAGE_PROVIDER:-Local}
+      - Storage__AzureConnectionString=${AZURE_STORAGE_CONNECTION_STRING}
+      - Storage__LocalPath=/app/storage
+    volumes:
+      - api-storage:/app/storage
+      - api-logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  web:
+    image: ${REGISTRY:-ghcr.io/your-org}/commonhall-web:${VERSION:-latest}
+    container_name: commonhall-web
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${API_URL:-http://localhost/api}
+      - NEXT_PUBLIC_APP_URL=${APP_URL:-http://localhost}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # ==========================================================================
+  # Database
+  # ==========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: commonhall-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=commonhall
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d commonhall"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # PostgreSQL tuning for small instances
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=512MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "max_connections=50"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==========================================================================
+  # Cache
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: commonhall-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 384M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
+  # ==========================================================================
+  # Search
+  # ==========================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: commonhall-elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      # Reduced heap for small instances
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.name=commonhall
+      - bootstrap.memory_lock=true
+      # Reduce thread pools for small instances
+      - thread_pool.write.queue_size=200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - commonhall-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  commonhall-network:
+    driver: bridge
+
+# ==========================================================================
+# Volumes
+# ==========================================================================
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  api-storage:
+    driver: local
+  api-logs:
+    driver: local
+  nginx-cache:
+    driver: local

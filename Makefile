@@ -29,7 +29,8 @@ help:
 	@echo ""
 	@echo "Production:"
 	@echo "  prod-build      Build production Docker images"
-	@echo "  prod-up         Start production stack"
+	@echo "  prod-up         Start production stack (standard: 8 CPU, 16 GB RAM)"
+	@echo "  prod-up-small   Start production stack (small: 4 CPU, 8-16 GB RAM)"
 	@echo "  prod-down       Stop production stack"
 	@echo "  prod-logs       View production logs"
 	@echo "  prod-ps         List production containers"
@@ -146,16 +147,26 @@ VERSION ?= latest
 prod-build: docker-build-api docker-build-web
 	@echo "Production images built successfully"
 
-# Start production stack
+# Start production stack (standard profile)
 prod-up:
 	docker compose -f infrastructure/docker/docker-compose.prod.yml up -d
-	@echo "Production stack started"
+	@echo "Production stack started (standard profile)"
+	@echo "  Web: http://localhost"
+	@echo "  API: http://localhost/api"
+
+# Start production stack (small profile - for 4 CPU / 8-16 GB RAM servers)
+prod-up-small:
+	docker compose -f infrastructure/docker/docker-compose.prod.small.yml up -d
+	@echo "Production stack started (small profile)"
 	@echo "  Web: http://localhost"
 	@echo "  API: http://localhost/api"
 
 # Stop production stack
 prod-down:
 	docker compose -f infrastructure/docker/docker-compose.prod.yml down
+
+prod-down-small:
+	docker compose -f infrastructure/docker/docker-compose.prod.small.yml down
 
 # View production logs
 prod-logs:
