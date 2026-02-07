@@ -3,6 +3,7 @@ using CommonHall.Api.Services;
 using CommonHall.Application.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
 
 namespace CommonHall.Api.Extensions;
@@ -64,6 +65,9 @@ public static class ServiceCollectionExtensions
             });
         });
 
+        // SignalR
+        services.AddSignalR();
+
         // JWT Authentication
         var jwtSettings = configuration.GetSection("Jwt");
         var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"] ?? "YourSuperSecretKeyForDevelopment12345!");
@@ -87,6 +91,21 @@ public static class ServiceCollectionExtensions
                     ValidAudience = jwtSettings["Audience"],
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
+                };
+
+                // Configure JWT for SignalR
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

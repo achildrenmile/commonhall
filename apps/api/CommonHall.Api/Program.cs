@@ -1,4 +1,5 @@
 using CommonHall.Api.Extensions;
+using CommonHall.Api.Hubs;
 using CommonHall.Api.Middleware;
 using CommonHall.Application;
 using CommonHall.Infrastructure;
@@ -47,6 +48,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// SignalR Hubs
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 

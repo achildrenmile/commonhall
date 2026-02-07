@@ -35,6 +35,14 @@ public interface IApplicationDbContext
     DbSet<SurveyAnswer> SurveyAnswers { get; }
     DbSet<Form> Forms { get; }
     DbSet<FormSubmission> FormSubmissions { get; }
+    DbSet<Community> Communities { get; }
+    DbSet<CommunityMembership> CommunityMemberships { get; }
+    DbSet<CommunityPost> CommunityPosts { get; }
+    DbSet<CommunityPostComment> CommunityPostComments { get; }
+    DbSet<CommunityPostReaction> CommunityPostReactions { get; }
+    DbSet<Conversation> Conversations { get; }
+    DbSet<ConversationMember> ConversationMembers { get; }
+    DbSet<Message> Messages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -131,3 +131,19 @@ export function usePeopleFacets() {
     staleTime: 5 * 60 * 1000,
   });
 }
+
+// Simple people search by query string (for autocomplete/selection)
+export function useSimplePeopleSearch(query: string) {
+  return useQuery({
+    queryKey: ['people-simple-search', query],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (query) params.set('q', query);
+      params.set('size', '10');
+      const result = await apiClient.get<SearchUsersResult>(`/people/search?${params.toString()}`);
+      return result.items;
+    },
+    enabled: query.length >= 2,
+    staleTime: 30 * 1000,
+  });
+}
