@@ -64,7 +64,7 @@ public sealed class ElasticsearchService : ISearchService
                 {
                     analyzer = new
                     {
-                        default = new
+                        @default = new
                         {
                             type = "standard"
                         }

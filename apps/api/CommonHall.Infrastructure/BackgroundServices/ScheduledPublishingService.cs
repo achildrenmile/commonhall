@@ -74,7 +74,7 @@ public sealed class ScheduledPublishingService : BackgroundService
             var now = DateTimeOffset.UtcNow;
 
             var articlesToPublish = await context.NewsArticles
-                .Where(a => a.Status == ArticleStatus.Scheduled &&
+                .Where(a => a.Status == ContentStatus.Scheduled &&
                            a.ScheduledAt.HasValue &&
                            a.ScheduledAt.Value <= now)
                 .ToListAsync(cancellationToken);
@@ -89,7 +89,7 @@ public sealed class ScheduledPublishingService : BackgroundService
 
             foreach (var article in articlesToPublish)
             {
-                article.Status = ArticleStatus.Published;
+                article.Status = ContentStatus.Published;
                 article.PublishedAt = now;
                 article.ScheduledAt = null;
 
