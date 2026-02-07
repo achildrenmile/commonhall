@@ -42,7 +42,7 @@ public class NewsArticlesController : ControllerBase
         [FromQuery] string? spaceSlug = null,
         [FromQuery] string? channelSlug = null,
         [FromQuery] string? tagSlug = null,
-        [FromQuery] ArticleStatus? status = null,
+        [FromQuery] ContentStatus? status = null,
         [FromQuery] bool? isPinned = null,
         [FromQuery] string? search = null,
         [FromQuery] string? cursor = null,

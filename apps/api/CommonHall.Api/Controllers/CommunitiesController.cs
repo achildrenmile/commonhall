@@ -523,7 +523,7 @@ public class CommunitiesController : BaseApiController
     public async Task<IActionResult> AddComment(
         string slug,
         Guid postId,
-        [FromBody] AddCommentRequest request,
+        [FromBody] AddPostCommentRequest request,
         CancellationToken cancellationToken)
     {
         var post = await _context.CommunityPosts
@@ -698,7 +698,7 @@ public record CreatePostRequest
     public string? ImageUrl { get; init; }
 }
 
-public record AddCommentRequest
+public record AddPostCommentRequest
 {
     public required string Body { get; init; }
 }
