@@ -32,6 +32,7 @@ public sealed class CommonHallDbContext : IdentityDbContext<User, IdentityRole<G
     public DbSet<Reaction> Reactions => Set<Reaction>();
     public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
     public DbSet<FileCollection> FileCollections => Set<FileCollection>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

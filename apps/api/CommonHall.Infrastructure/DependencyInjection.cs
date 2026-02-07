@@ -50,6 +50,9 @@ public static class DependencyInjection
         // Seeder
         services.AddScoped<DbSeeder>();
 
+        // Auth Service
+        services.AddScoped<IAuthService, AuthService>();
+
         return services;
     }
 }

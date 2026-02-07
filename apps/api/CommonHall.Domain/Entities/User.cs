@@ -39,4 +39,5 @@ public sealed class User : IdentityUser<Guid>, ISoftDeletable
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     public ICollection<StoredFile> UploadedFiles { get; set; } = new List<StoredFile>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

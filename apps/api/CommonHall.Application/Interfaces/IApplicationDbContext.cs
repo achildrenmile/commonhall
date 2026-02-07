@@ -20,6 +20,7 @@ public interface IApplicationDbContext
     DbSet<Reaction> Reactions { get; }
     DbSet<StoredFile> StoredFiles { get; }
     DbSet<FileCollection> FileCollections { get; }
+    DbSet<RefreshToken> RefreshTokens { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

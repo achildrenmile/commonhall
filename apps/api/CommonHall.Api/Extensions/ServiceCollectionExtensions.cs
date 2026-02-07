@@ -90,11 +90,23 @@ public static class ServiceCollectionExtensions
                 };
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdminRole", policy =>
+                policy.RequireRole("Admin"));
+
+            options.AddPolicy("RequireEditorRole", policy =>
+                policy.RequireRole("Admin", "Editor"));
+
+            options.AddPolicy("RequireAuthenticatedUser", policy =>
+                policy.RequireAuthenticatedUser());
+        });
 
         // Register services
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<CurrentUserService>();
+        services.AddScoped<ICurrentUserService>(sp => sp.GetRequiredService<CurrentUserService>());
+        services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<CurrentUserService>());
 
         return services;
     }
