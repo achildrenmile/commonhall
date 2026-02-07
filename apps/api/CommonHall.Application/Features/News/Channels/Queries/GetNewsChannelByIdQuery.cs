@@ -23,16 +23,9 @@ public sealed class GetNewsChannelByIdQueryHandler : IRequestHandler<GetNewsChan
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException("NewsChannel", request.Id);
 
-        return new NewsChannelDto
-        {
-            Id = channel.Id,
-            SpaceId = channel.SpaceId,
-            Name = channel.Name,
-            Slug = channel.Slug,
-            Description = channel.Description,
-            Color = channel.Color,
-            SortOrder = channel.SortOrder,
-            CreatedAt = channel.CreatedAt
-        };
+        var articleCount = await _context.NewsArticles
+            .CountAsync(a => a.ChannelId == channel.Id && !a.IsDeleted, cancellationToken);
+
+        return NewsChannelDto.FromEntity(channel, articleCount);
     }
 }
