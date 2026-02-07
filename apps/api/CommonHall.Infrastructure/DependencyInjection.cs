@@ -53,6 +53,12 @@ public static class DependencyInjection
         // Auth Service
         services.AddScoped<IAuthService, AuthService>();
 
+        // Slug Service
+        services.AddScoped<ISlugService, SlugService>();
+
+        // Content Authorization Service
+        services.AddScoped<IContentAuthorizationService, ContentAuthorizationService>();
+
         return services;
     }
 }
