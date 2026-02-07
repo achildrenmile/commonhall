@@ -25,6 +25,10 @@ public interface IApplicationDbContext
     DbSet<EmailNewsletter> EmailNewsletters { get; }
     DbSet<EmailRecipient> EmailRecipients { get; }
     DbSet<EmailClick> EmailClicks { get; }
+    DbSet<Journey> Journeys { get; }
+    DbSet<JourneyStep> JourneySteps { get; }
+    DbSet<JourneyEnrollment> JourneyEnrollments { get; }
+    DbSet<JourneyStepCompletion> JourneyStepCompletions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

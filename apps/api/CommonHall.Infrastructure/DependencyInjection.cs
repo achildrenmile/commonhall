@@ -101,11 +101,19 @@ public static class DependencyInjection
         services.AddSingleton(Channel.CreateUnbounded<NewsletterSendJob>(
             new UnboundedChannelOptions { SingleReader = true }));
 
+        // Notification Service
+        services.AddScoped<INotificationService, NotificationService>();
+
+        // Journey Services
+        services.AddScoped<IJourneyTriggerService, JourneyTriggerService>();
+        services.AddScoped<IJourneyService, JourneyService>();
+
         // Background Services
         services.AddHostedService<ScheduledPublishingService>();
         services.AddHostedService<RuleBasedGroupRecalculationService>();
         services.AddHostedService<EmailSendingBackgroundService>();
         services.AddHostedService<ScheduledNewsletterService>();
+        services.AddHostedService<JourneyProgressionService>();
 
         return services;
     }

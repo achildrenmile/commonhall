@@ -37,6 +37,10 @@ public sealed class CommonHallDbContext : IdentityDbContext<User, IdentityRole<G
     public DbSet<EmailNewsletter> EmailNewsletters => Set<EmailNewsletter>();
     public DbSet<EmailRecipient> EmailRecipients => Set<EmailRecipient>();
     public DbSet<EmailClick> EmailClicks => Set<EmailClick>();
+    public DbSet<Journey> Journeys => Set<Journey>();
+    public DbSet<JourneyStep> JourneySteps => Set<JourneyStep>();
+    public DbSet<JourneyEnrollment> JourneyEnrollments => Set<JourneyEnrollment>();
+    public DbSet<JourneyStepCompletion> JourneyStepCompletions => Set<JourneyStepCompletion>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

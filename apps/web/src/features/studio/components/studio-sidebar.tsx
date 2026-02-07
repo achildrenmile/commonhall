@@ -15,6 +15,7 @@ import {
   ChevronDown,
   Mail,
   Send,
+  Route,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/lib/auth-store';
@@ -62,6 +63,7 @@ const navigation: NavItem[] = [
     icon: Send,
     children: [
       { title: 'Newsletters', href: '/studio/email' },
+      { title: 'Journeys', href: '/studio/journeys' },
     ],
   },
   {
