@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommonHall.Application.Users.Queries;
 
-public sealed record GetUsersQuery : IRequest<PaginatedResult<UserDto>>
+public sealed record GetUsersQuery : IRequest<PagedResult<UserDto>>
 {
     public string? Search { get; init; }
     public string? Department { get; init; }
@@ -17,7 +17,7 @@ public sealed record GetUsersQuery : IRequest<PaginatedResult<UserDto>>
     public int Size { get; init; } = 20;
 }
 
-public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PaginatedResult<UserDto>>
+public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PagedResult<UserDto>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -26,7 +26,7 @@ public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, Pagina
         _context = context;
     }
 
-    public async Task<PaginatedResult<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         var query = _context.Users.AsQueryable();
 
@@ -63,9 +63,12 @@ public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, Pagina
             .Take(request.Size)
             .ToListAsync(cancellationToken);
 
-        return PaginatedResult<UserDto>.Create(
-            users.Select(UserDto.FromEntity).ToList(),
-            total,
-            request.Size);
+        return new PagedResult<UserDto>
+        {
+            Items = users.Select(UserDto.FromEntity).ToList(),
+            TotalCount = total,
+            Page = request.Page,
+            Size = request.Size
+        };
     }
 }

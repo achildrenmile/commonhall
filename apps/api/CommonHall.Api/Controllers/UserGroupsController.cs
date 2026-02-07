@@ -191,11 +191,7 @@ public class UserGroupsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveGroupMember(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var command = new RemoveGroupMemberCommand
-        {
-            GroupId = id,
-            UserId = userId
-        };
+        var command = new RemoveGroupMemberCommand(id, userId);
 
         await _mediator.Send(command, cancellationToken);
 

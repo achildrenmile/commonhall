@@ -23,4 +23,10 @@ public sealed record ApiMeta
     public int? Total { get; init; }
     public bool? HasMore { get; init; }
     public string? NextCursor { get; init; }
+
+    // Page-based pagination properties
+    public int? Page { get; init; }
+    public int? Size { get; init; }
+    public int? TotalCount { get; init; }
+    public int? TotalPages { get; init; }
 }

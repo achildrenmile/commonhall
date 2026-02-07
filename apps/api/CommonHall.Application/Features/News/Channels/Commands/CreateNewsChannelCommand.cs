@@ -10,6 +10,7 @@ public sealed record CreateNewsChannelCommand : IRequest<NewsChannelDto>
     public required string Name { get; init; }
     public string? Description { get; init; }
     public string? Color { get; init; }
+    public int SortOrder { get; init; }
 }
 
 public sealed class CreateNewsChannelCommandValidator : AbstractValidator<CreateNewsChannelCommand>

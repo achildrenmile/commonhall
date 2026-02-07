@@ -35,12 +35,18 @@ public class UsersController : ControllerBase
         [FromQuery] int size = 20,
         CancellationToken cancellationToken = default)
     {
+        UserRole? parsedRole = null;
+        if (!string.IsNullOrWhiteSpace(role) && Enum.TryParse<UserRole>(role, true, out var r))
+        {
+            parsedRole = r;
+        }
+
         var query = new GetUsersQuery
         {
             Search = search,
             Department = department,
             Location = location,
-            Role = role,
+            Role = parsedRole,
             Page = page,
             Size = size
         };
