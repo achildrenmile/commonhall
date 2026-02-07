@@ -44,6 +44,8 @@ public interface IApplicationDbContext
     DbSet<ConversationMember> ConversationMembers { get; }
     DbSet<Message> Messages { get; }
     DbSet<TrackingEvent> TrackingEvents { get; }
+    DbSet<ContentHealthReport> ContentHealthReports { get; }
+    DbSet<ContentHealthIssue> ContentHealthIssues { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

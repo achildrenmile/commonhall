@@ -56,6 +56,8 @@ public sealed class CommonHallDbContext : IdentityDbContext<User, IdentityRole<G
     public DbSet<ConversationMember> ConversationMembers => Set<ConversationMember>();
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<TrackingEvent> TrackingEvents => Set<TrackingEvent>();
+    public DbSet<ContentHealthReport> ContentHealthReports => Set<ContentHealthReport>();
+    public DbSet<ContentHealthIssue> ContentHealthIssues => Set<ContentHealthIssue>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

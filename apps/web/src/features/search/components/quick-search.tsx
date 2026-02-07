@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Search, FileText, Newspaper, User, File, ArrowRight } from 'lucide-react';
+import { Loader2, Search, FileText, Newspaper, User, File, ArrowRight, Bot, Sparkles } from 'lucide-react';
 import {
   CommandDialog,
   CommandInput,
@@ -13,6 +13,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { useDebounce } from '@/lib/hooks/use-debounce';
 import { useSearchSuggestions } from '../api';
 import { trackSearch } from '@/lib/analytics';
@@ -159,6 +160,25 @@ export function QuickSearch({ open, onOpenChange }: QuickSearchProps) {
                   View all results for "{query}"
                 </span>
                 <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </CommandItem>
+              <CommandItem
+                onSelect={() => {
+                  onOpenChange(false);
+                  router.push(`/search?q=${encodeURIComponent(query.trim())}&ai=true`);
+                  setQuery('');
+                }}
+                className="flex items-center justify-between py-3"
+              >
+                <div className="flex items-center gap-2">
+                  <Bot className="h-4 w-4 text-purple-500" />
+                  <span className="text-muted-foreground">
+                    Ask AI about "{query}"
+                  </span>
+                </div>
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  AI
+                </Badge>
               </CommandItem>
             </CommandGroup>
           </>

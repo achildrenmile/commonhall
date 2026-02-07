@@ -47,6 +47,9 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Rate limiting for AI endpoints
+app.UseRateLimiting();
+
 app.MapControllers();
 
 // SignalR Hubs

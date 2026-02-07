@@ -82,6 +82,10 @@ const navigation: NavItem[] = [
     href: '/studio/analytics',
     icon: BarChart3,
     adminOnly: true,
+    children: [
+      { title: 'Overview', href: '/studio/analytics' },
+      { title: 'Content Health', href: '/studio/analytics/content-health' },
+    ],
   },
   {
     title: 'Users',

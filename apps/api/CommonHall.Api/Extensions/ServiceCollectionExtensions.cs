@@ -3,6 +3,7 @@ using CommonHall.Api.Services;
 using CommonHall.Application.Interfaces;
 using CommonHall.Infrastructure.Services;
 using CommonHall.Infrastructure.Search;
+using CommonHall.Infrastructure.BackgroundJobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.SignalR;
@@ -136,6 +137,15 @@ public static class ServiceCollectionExtensions
 
         // Search services
         services.AddHttpClient<ISearchService, ElasticsearchService>();
+
+        // AI services
+        services.AddHttpClient<IAiService, AnthropicAiService>();
+
+        // Content Health services
+        services.AddScoped<IContentHealthService, ContentHealthService>();
+
+        // Background jobs
+        services.AddHostedService<CommentSentimentJob>();
 
         return services;
     }
