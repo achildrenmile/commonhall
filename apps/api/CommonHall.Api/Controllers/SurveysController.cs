@@ -353,7 +353,7 @@ public class SurveysController : BaseApiController
 
         if (survey.IsAnonymous)
         {
-            userHash = ComputeUserHash(_currentUser.UserId, id);
+            userHash = ComputeUserHash(_currentUser.UserId!.Value, id);
             existingResponse = await _context.SurveyResponses
                 .FirstOrDefaultAsync(r => r.SurveyId == id && r.UserHash == userHash, cancellationToken);
         }
@@ -434,7 +434,7 @@ public class SurveysController : BaseApiController
 
         if (survey.IsAnonymous)
         {
-            var userHash = ComputeUserHash(_currentUser.UserId, id);
+            var userHash = ComputeUserHash(_currentUser.UserId!.Value, id);
             response = await _context.SurveyResponses
                 .Include(r => r.Answers)
                 .FirstOrDefaultAsync(r => r.SurveyId == id && r.UserHash == userHash, cancellationToken);

@@ -87,8 +87,7 @@ public class NewsArticlesController : ControllerBase
     {
         var query = new GetNewsArticleBySlugQuery
         {
-            SpaceSlug = spaceSlug,
-            ArticleSlug = articleSlug,
+            Slug = articleSlug,
             IncrementView = incrementView
         };
 
