@@ -41,6 +41,12 @@ public sealed class CommonHallDbContext : IdentityDbContext<User, IdentityRole<G
     public DbSet<JourneyStep> JourneySteps => Set<JourneyStep>();
     public DbSet<JourneyEnrollment> JourneyEnrollments => Set<JourneyEnrollment>();
     public DbSet<JourneyStepCompletion> JourneyStepCompletions => Set<JourneyStepCompletion>();
+    public DbSet<Survey> Surveys => Set<Survey>();
+    public DbSet<SurveyQuestion> SurveyQuestions => Set<SurveyQuestion>();
+    public DbSet<SurveyResponse> SurveyResponses => Set<SurveyResponse>();
+    public DbSet<SurveyAnswer> SurveyAnswers => Set<SurveyAnswer>();
+    public DbSet<Form> Forms => Set<Form>();
+    public DbSet<FormSubmission> FormSubmissions => Set<FormSubmission>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

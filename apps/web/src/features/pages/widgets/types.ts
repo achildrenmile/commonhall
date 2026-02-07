@@ -7,7 +7,9 @@ export type WidgetType =
   | 'static-content'
   | 'user-profile'
   | 'button'
-  | 'accordion';
+  | 'accordion'
+  | 'survey'
+  | 'form';
 
 export interface WidgetBlock<T = Record<string, unknown>> {
   id: string;
@@ -69,6 +71,16 @@ export interface AccordionData {
     title: string;
     content: string;
   }>;
+}
+
+export interface SurveyData {
+  surveyId: string;
+  showProgress?: boolean;
+  showResults?: boolean;
+}
+
+export interface FormWidgetData {
+  formId: string;
 }
 
 // Widget component props

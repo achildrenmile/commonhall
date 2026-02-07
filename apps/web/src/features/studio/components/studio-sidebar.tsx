@@ -16,6 +16,7 @@ import {
   Mail,
   Send,
   Route,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/lib/auth-store';
@@ -64,6 +65,15 @@ const navigation: NavItem[] = [
     children: [
       { title: 'Newsletters', href: '/studio/email' },
       { title: 'Journeys', href: '/studio/journeys' },
+    ],
+  },
+  {
+    title: 'Feedback',
+    href: '/studio/feedback',
+    icon: ClipboardList,
+    children: [
+      { title: 'Surveys', href: '/studio/surveys' },
+      { title: 'Forms', href: '/studio/forms' },
     ],
   },
   {

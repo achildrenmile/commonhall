@@ -29,6 +29,12 @@ public interface IApplicationDbContext
     DbSet<JourneyStep> JourneySteps { get; }
     DbSet<JourneyEnrollment> JourneyEnrollments { get; }
     DbSet<JourneyStepCompletion> JourneyStepCompletions { get; }
+    DbSet<Survey> Surveys { get; }
+    DbSet<SurveyQuestion> SurveyQuestions { get; }
+    DbSet<SurveyResponse> SurveyResponses { get; }
+    DbSet<SurveyAnswer> SurveyAnswers { get; }
+    DbSet<Form> Forms { get; }
+    DbSet<FormSubmission> FormSubmissions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

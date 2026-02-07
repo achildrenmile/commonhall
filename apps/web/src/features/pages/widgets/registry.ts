@@ -11,6 +11,8 @@ const StaticContentWidget = lazy(() => import('./components/static-content-widge
 const UserProfileWidget = lazy(() => import('./components/user-profile-widget'));
 const ButtonWidget = lazy(() => import('./components/button-widget'));
 const AccordionWidget = lazy(() => import('./components/accordion-widget'));
+const SurveyWidget = lazy(() => import('./components/survey-widget'));
+const FormWidget = lazy(() => import('./components/form-widget'));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WidgetComponent = ComponentType<WidgetProps<any>>;
@@ -25,6 +27,8 @@ const widgetRegistry: Record<WidgetType, WidgetComponent> = {
   'user-profile': UserProfileWidget,
   'button': ButtonWidget,
   'accordion': AccordionWidget,
+  'survey': SurveyWidget,
+  'form': FormWidget,
 };
 
 export function getWidgetComponent(type: string): WidgetComponent | null {
