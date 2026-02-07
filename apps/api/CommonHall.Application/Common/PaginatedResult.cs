@@ -1,5 +1,22 @@
 namespace CommonHall.Application.Common;
 
+/// <summary>
+/// Page-based pagination result with page numbers
+/// </summary>
+public sealed record PagedResult<T>
+{
+    public required List<T> Items { get; init; }
+    public required int TotalCount { get; init; }
+    public int Page { get; init; }
+    public int Size { get; init; }
+    public int TotalPages => (int)Math.Ceiling(TotalCount / (double)Size);
+    public bool HasPreviousPage => Page > 1;
+    public bool HasNextPage => Page < TotalPages;
+}
+
+/// <summary>
+/// Cursor-based pagination result (legacy name)
+/// </summary>
 public sealed record PaginatedResult<T>
 {
     public required List<T> Items { get; init; }
