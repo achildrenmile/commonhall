@@ -21,6 +21,7 @@ export interface StudioNewsArticle {
   viewCount: number;
   likeCount: number;
   commentCount: number;
+  visibilityRule?: string;
   channelId?: string;
   channel?: {
     id: string;
@@ -108,6 +109,7 @@ export interface CreateArticleInput {
   tags?: string[];
   isPinned?: boolean;
   allowComments?: boolean;
+  visibilityRule?: string;
 }
 
 export function useCreateArticle() {

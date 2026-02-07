@@ -13,11 +13,19 @@ public sealed class GetPageBySlugQueryHandler : IRequestHandler<GetPageBySlugQue
 {
     private readonly IApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
+    private readonly ICurrentUser _currentUser;
+    private readonly ITargetingService _targetingService;
 
-    public GetPageBySlugQueryHandler(IApplicationDbContext context, UserManager<User> userManager)
+    public GetPageBySlugQueryHandler(
+        IApplicationDbContext context,
+        UserManager<User> userManager,
+        ICurrentUser currentUser,
+        ITargetingService targetingService)
     {
         _context = context;
         _userManager = userManager;
+        _currentUser = currentUser;
+        _targetingService = targetingService;
     }
 
     public async Task<PageDetailDto> Handle(GetPageBySlugQuery request, CancellationToken cancellationToken)
@@ -37,6 +45,32 @@ public sealed class GetPageBySlugQueryHandler : IRequestHandler<GetPageBySlugQue
         if (page is null)
         {
             throw new NotFoundException("Page", request.PageSlug);
+        }
+
+        // Check page-level visibility
+        if (_currentUser.UserId.HasValue)
+        {
+            var isVisible = await _targetingService.IsVisibleAsync(
+                _currentUser.UserId.Value,
+                page.VisibilityRule,
+                cancellationToken);
+
+            if (!isVisible)
+            {
+                throw new ForbiddenException("You do not have access to this page.");
+            }
+
+            // Filter widgets based on visibility rules
+            var filteredContent = await _targetingService.FilterWidgetsAsync(
+                page.Content,
+                _currentUser.UserId.Value,
+                cancellationToken);
+            page.Content = filteredContent;
+        }
+        else if (!string.IsNullOrEmpty(page.VisibilityRule))
+        {
+            // Anonymous users cannot access targeted pages
+            throw new ForbiddenException("You must be logged in to access this page.");
         }
 
         User? creator = null;

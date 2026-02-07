@@ -67,6 +67,7 @@ import {
   type StudioNewsArticle,
   type UserSearchResult,
 } from '@/features/studio/api/news';
+import { RuleBuilder, jsonToRule, ruleToJson, type VisibilityRule } from '@/features/targeting';
 
 type PublishMode = 'now' | 'schedule';
 
@@ -81,6 +82,7 @@ interface ArticleFormData {
   tags: Array<{ id: string; name: string; slug: string }>;
   isPinned: boolean;
   allowComments: boolean;
+  visibilityRule: VisibilityRule;
 }
 
 const defaultFormData: ArticleFormData = {
@@ -94,6 +96,7 @@ const defaultFormData: ArticleFormData = {
   tags: [],
   isPinned: false,
   allowComments: true,
+  visibilityRule: { type: 'all' },
 };
 
 function TagInput({
@@ -322,6 +325,7 @@ export default function NewsEditorPage() {
       ...data,
       displayAuthorId: selectedDisplayAuthor?.id || undefined,
       tags: data.tags.map((t) => t.name),
+      visibilityRule: ruleToJson(data.visibilityRule) || undefined,
     };
 
     await updateArticle.mutateAsync({ id, ...payload });
@@ -349,6 +353,7 @@ export default function NewsEditorPage() {
         tags: article.tags || [],
         isPinned: article.isPinned,
         allowComments: article.allowComments,
+        visibilityRule: jsonToRule(article.visibilityRule),
       });
       if (article.displayAuthor) {
         setSelectedDisplayAuthor({
@@ -385,6 +390,7 @@ export default function NewsEditorPage() {
         ...formData,
         displayAuthorId: selectedDisplayAuthor?.id || undefined,
         tags: formData.tags.map((t) => t.name),
+        visibilityRule: ruleToJson(formData.visibilityRule) || undefined,
       };
 
       if (isNewArticle) {
@@ -409,6 +415,7 @@ export default function NewsEditorPage() {
         ...formData,
         displayAuthorId: selectedDisplayAuthor?.id || undefined,
         tags: formData.tags.map((t) => t.name),
+        visibilityRule: ruleToJson(formData.visibilityRule) || undefined,
       };
 
       let id = articleId;
@@ -667,6 +674,17 @@ export default function NewsEditorPage() {
               <Switch
                 checked={formData.isPinned}
                 onCheckedChange={(checked) => updateField('isPinned', checked)}
+              />
+            </div>
+
+            {/* Audience Targeting */}
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+              <Label className="text-sm text-slate-500 mb-3 block">
+                Audience Targeting
+              </Label>
+              <RuleBuilder
+                value={formData.visibilityRule}
+                onChange={(rule) => updateField('visibilityRule', rule)}
               />
             </div>
 

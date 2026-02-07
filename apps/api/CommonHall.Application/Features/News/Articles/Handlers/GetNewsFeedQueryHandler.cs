@@ -14,11 +14,19 @@ public sealed class GetNewsFeedQueryHandler : IRequestHandler<GetNewsFeedQuery, 
 {
     private readonly IApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
+    private readonly ICurrentUser _currentUser;
+    private readonly ITargetingService _targetingService;
 
-    public GetNewsFeedQueryHandler(IApplicationDbContext context, UserManager<User> userManager)
+    public GetNewsFeedQueryHandler(
+        IApplicationDbContext context,
+        UserManager<User> userManager,
+        ICurrentUser currentUser,
+        ITargetingService targetingService)
     {
         _context = context;
         _userManager = userManager;
+        _currentUser = currentUser;
+        _targetingService = targetingService;
     }
 
     public async Task<CursorPaginatedResult<NewsArticleListDto>> Handle(GetNewsFeedQuery request, CancellationToken cancellationToken)
@@ -94,13 +102,24 @@ public sealed class GetNewsFeedQueryHandler : IRequestHandler<GetNewsFeedQuery, 
             .OrderByDescending(a => a.IsPinned)
             .ThenByDescending(a => a.PublishedAt);
 
-        // Fetch one extra to determine if there are more
+        // Fetch extra to account for targeting filtering
+        var fetchSize = request.Size * 2 + 1; // Fetch extra to ensure we have enough after filtering
         var articles = await orderedQuery
-            .Take(request.Size + 1)
+            .Take(fetchSize)
             .ToListAsync(cancellationToken);
 
+        // Apply visibility filtering based on current user
+        var userId = _currentUser.UserId;
+        var visibleArticles = userId.HasValue
+            ? (await _targetingService.FilterVisibleAsync(
+                userId.Value,
+                articles,
+                a => a.VisibilityRule,
+                cancellationToken)).ToList()
+            : articles.Where(a => string.IsNullOrEmpty(a.VisibilityRule)).ToList();
+
         var dtos = new List<NewsArticleListDto>();
-        foreach (var article in articles.Take(request.Size))
+        foreach (var article in visibleArticles.Take(request.Size))
         {
             var author = await _userManager.FindByIdAsync(article.AuthorId.ToString());
             var displayAuthor = article.GhostAuthorId.HasValue

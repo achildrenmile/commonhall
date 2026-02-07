@@ -9,16 +9,10 @@ export type WidgetType =
   | 'button'
   | 'accordion';
 
-export type VisibilityCondition = {
-  type: 'role' | 'group' | 'authenticated';
-  value?: string;
-};
-
 export interface WidgetBlock<T = Record<string, unknown>> {
   id: string;
   type: WidgetType | string;
-  data: T;
-  visibility?: VisibilityCondition;
+  data: T & { visibility?: string };
 }
 
 // Widget-specific data types

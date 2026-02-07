@@ -19,6 +19,7 @@ export interface StudioPage {
   };
   parentId?: string;
   order: number;
+  visibilityRule?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -98,6 +99,7 @@ export interface UpdatePageInput {
   description?: string;
   content?: WidgetBlock[];
   isPublished?: boolean;
+  visibilityRule?: string;
 }
 
 export function useUpdatePage() {

@@ -15,6 +15,7 @@ import {
   LayoutList,
   Square,
   X,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,6 +42,7 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import type { WidgetBlock, WidgetType } from '@/features/pages/widgets';
+import { RuleBuilder, jsonToRule, ruleToJson, type VisibilityRule } from '@/features/targeting';
 
 // Lazy load TiptapEditor to avoid SSR issues
 const TiptapEditor = lazy(() =>
@@ -276,6 +278,33 @@ function ButtonSettings({ block, open, onOpenChange, onUpdate }: BlockSettingsPr
   );
 }
 
+function VisibilitySettings({ block, open, onOpenChange, onUpdate }: BlockSettingsProps) {
+  const visibilityJson = (block.data as { visibility?: string }).visibility;
+  const [rule, setRule] = useState<VisibilityRule>(jsonToRule(visibilityJson));
+
+  const handleSave = () => {
+    onUpdate({ visibility: ruleToJson(rule) || undefined });
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Widget Visibility</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Control who can see this content block. Leave as &quot;Everyone&quot; to show to all users.
+          </p>
+          <RuleBuilder value={rule} onChange={setRule} />
+          <Button onClick={handleSave} className="w-full">Save</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function BlockItem({
   block,
   index,
@@ -294,8 +323,10 @@ function BlockItem({
   onMoveDown: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [visibilityOpen, setVisibilityOpen] = useState(false);
   const config = blockTypes.find((bt) => bt.type === block.type);
   const Icon = config?.icon || Type;
+  const hasVisibilityRule = !!(block.data as { visibility?: string }).visibility;
 
   const renderSettings = () => {
     switch (block.type) {
@@ -334,6 +365,12 @@ function BlockItem({
   return (
     <>
       {renderSettings()}
+      <VisibilitySettings
+        block={block}
+        open={visibilityOpen}
+        onOpenChange={setVisibilityOpen}
+        onUpdate={onUpdate}
+      />
       <div className="group relative border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-950 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
         {/* Block Header */}
         <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100 dark:border-slate-800">
@@ -373,6 +410,18 @@ function BlockItem({
                 <Settings className="h-4 w-4" />
               </Button>
             )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-7 w-7",
+                hasVisibilityRule && "text-blue-500 hover:text-blue-600"
+              )}
+              onClick={() => setVisibilityOpen(true)}
+              title="Widget visibility targeting"
+            >
+              <Users className="h-4 w-4" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"

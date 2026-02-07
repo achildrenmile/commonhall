@@ -28,6 +28,7 @@ import {
   useUnpublishPage,
 } from '@/features/studio/api/pages';
 import { formatDate } from '@/lib/utils';
+import { RuleBuilder, jsonToRule, ruleToJson, type VisibilityRule } from '@/features/targeting';
 
 interface PageFormData {
   title: string;
@@ -35,6 +36,7 @@ interface PageFormData {
   icon: string;
   description: string;
   content: WidgetBlock[];
+  visibilityRule: VisibilityRule;
 }
 
 const defaultFormData: PageFormData = {
@@ -43,6 +45,7 @@ const defaultFormData: PageFormData = {
   icon: '',
   description: '',
   content: [],
+  visibilityRule: { type: 'all' },
 };
 
 function EditorSkeleton() {
@@ -79,6 +82,7 @@ export default function PageEditorPage() {
         icon: page.icon || '',
         description: page.description || '',
         content: page.content || [],
+        visibilityRule: jsonToRule(page.visibilityRule),
       });
     }
   }, [page]);
@@ -96,6 +100,7 @@ export default function PageEditorPage() {
       await updatePage.mutateAsync({
         id: pageId,
         ...formData,
+        visibilityRule: ruleToJson(formData.visibilityRule) || undefined,
       });
       setLastSaved(new Date());
     } catch (error) {
@@ -274,6 +279,17 @@ export default function PageEditorPage() {
                 onChange={(e) => updateField('icon', e.target.value)}
                 placeholder="📄"
                 maxLength={2}
+              />
+            </div>
+
+            {/* Audience Targeting */}
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+              <Label className="text-sm text-slate-500 mb-3 block">
+                Audience Targeting
+              </Label>
+              <RuleBuilder
+                value={formData.visibilityRule}
+                onChange={(rule) => updateField('visibilityRule', rule)}
               />
             </div>
 

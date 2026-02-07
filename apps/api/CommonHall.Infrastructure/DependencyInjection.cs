@@ -72,8 +72,15 @@ public static class DependencyInjection
         // File Validation Service
         services.AddScoped<IFileValidationService, FileValidationService>();
 
+        // Targeting Service
+        services.AddScoped<ITargetingService, TargetingService>();
+
+        // Rule-Based Group Service
+        services.AddScoped<IRuleBasedGroupService, RuleBasedGroupService>();
+
         // Background Services
         services.AddHostedService<ScheduledPublishingService>();
+        services.AddHostedService<RuleBasedGroupRecalculationService>();
 
         return services;
     }
