@@ -23,17 +23,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 import { MobileSidebar } from './sidebar';
 import { Breadcrumb } from './breadcrumb';
+import { QuickSearch } from '@/features/search';
 
 export function Header() {
   const router = useRouter();
@@ -157,27 +149,8 @@ export function Header() {
         </div>
       </header>
 
-      {/* Command palette */}
-      <CommandDialog open={commandOpen} onOpenChange={setCommandOpen}>
-        <CommandInput placeholder="Type a command or search..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Quick Actions">
-            <CommandItem onSelect={() => { router.push('/'); setCommandOpen(false); }}>
-              Go to Home
-            </CommandItem>
-            <CommandItem onSelect={() => { router.push('/news'); setCommandOpen(false); }}>
-              Browse News
-            </CommandItem>
-            <CommandItem onSelect={() => { router.push('/spaces'); setCommandOpen(false); }}>
-              View Spaces
-            </CommandItem>
-            <CommandItem onSelect={() => { router.push('/people'); setCommandOpen(false); }}>
-              Find People
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
+      {/* Quick Search */}
+      <QuickSearch open={commandOpen} onOpenChange={setCommandOpen} />
     </>
   );
 }
