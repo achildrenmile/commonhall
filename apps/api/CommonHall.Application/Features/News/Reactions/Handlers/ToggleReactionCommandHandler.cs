@@ -54,8 +54,7 @@ public sealed class ToggleReactionCommandHandler : IRequestHandler<ToggleReactio
                 NewsArticleId = request.NewsArticleId,
                 UserId = _currentUser.UserId.Value,
                 Type = request.Type,
-                CreatedBy = _currentUser.UserId,
-                UpdatedBy = _currentUser.UserId
+                CreatedAt = DateTimeOffset.UtcNow
             };
             _context.Reactions.Add(reaction);
             isReacted = true;

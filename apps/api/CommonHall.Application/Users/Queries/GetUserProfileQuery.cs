@@ -61,13 +61,13 @@ public sealed class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQ
     {
         var user = await _context.Users
             .Include(u => u.GroupMemberships)
-                .ThenInclude(gm => gm.Group)
+                .ThenInclude(gm => gm.UserGroup)
             .FirstOrDefaultAsync(u => u.Id == request.Id && !u.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"User with ID {request.Id} not found");
 
         var recentArticles = await _context.NewsArticles
-            .Where(a => (a.AuthorId == request.Id || a.DisplayAuthorId == request.Id)
-                        && a.Status == NewsArticleStatus.Published
+            .Where(a => (a.AuthorId == request.Id || a.GhostAuthorId == request.Id)
+                        && a.Status == ContentStatus.Published
                         && !a.IsDeleted)
             .OrderByDescending(a => a.PublishedAt)
             .Take(5)
@@ -84,13 +84,13 @@ public sealed class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQ
             .ToListAsync(cancellationToken);
 
         var groups = user.GroupMemberships
-            .Where(gm => !gm.Group.IsDeleted)
+            .Where(gm => !gm.UserGroup.IsDeleted)
             .Select(gm => new UserProfileGroupDto
             {
-                Id = gm.Group.Id,
-                Name = gm.Group.Name,
-                Slug = gm.Group.Slug,
-                Description = gm.Group.Description
+                Id = gm.UserGroup.Id,
+                Name = gm.UserGroup.Name,
+                Slug = gm.UserGroup.Slug,
+                Description = gm.UserGroup.Description
             })
             .OrderBy(g => g.Name)
             .ToList();
