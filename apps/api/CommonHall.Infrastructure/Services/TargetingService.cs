@@ -147,7 +147,7 @@ public sealed class TargetingService : ITargetingService
         foreach (var user in users)
         {
             var attributes = MapToUserAttributes(user);
-            var groupIds = user.GroupMemberships.Select(gm => gm.GroupId).ToHashSet();
+            var groupIds = user.GroupMemberships.Select(gm => gm.UserGroupId).ToHashSet();
 
             if (await EvaluateRuleWithCachedDataAsync(rule, attributes, groupIds))
             {
@@ -275,7 +275,7 @@ public sealed class TargetingService : ITargetingService
 
         var groupIds = await _context.UserGroupMemberships
             .Where(ugm => ugm.UserId == userId)
-            .Select(ugm => ugm.GroupId)
+            .Select(ugm => ugm.UserGroupId)
             .ToListAsync(cancellationToken);
 
         if (_cacheService != null)

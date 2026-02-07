@@ -47,7 +47,7 @@ public sealed class RuleBasedGroupService : IRuleBasedGroupService
 
         // Get current memberships
         var currentMemberships = await _context.UserGroupMemberships
-            .Where(ugm => ugm.GroupId == groupId)
+            .Where(ugm => ugm.UserGroupId == groupId)
             .ToListAsync(cancellationToken);
 
         var currentMemberIds = currentMemberships.Select(m => m.UserId).ToHashSet();
@@ -72,8 +72,7 @@ public sealed class RuleBasedGroupService : IRuleBasedGroupService
         {
             _context.UserGroupMemberships.Add(new UserGroupMembership
             {
-                Id = Guid.NewGuid(),
-                GroupId = groupId,
+                UserGroupId = groupId,
                 UserId = userId,
                 JoinedAt = DateTimeOffset.UtcNow
             });
@@ -152,7 +151,7 @@ public sealed class RuleBasedGroupService : IRuleBasedGroupService
                 PreferredLanguage = user.PreferredLanguage
             };
 
-            var groupIds = user.GroupMemberships.Select(gm => gm.GroupId).ToHashSet();
+            var groupIds = user.GroupMemberships.Select(gm => gm.UserGroupId).ToHashSet();
 
             if (EvaluateRule(rule, userAttributes, groupIds))
             {

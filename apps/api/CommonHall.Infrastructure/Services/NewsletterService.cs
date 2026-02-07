@@ -228,7 +228,7 @@ public sealed class NewsletterService : INewsletterService
                     if (groupIds?.Any() == true)
                     {
                         usersQuery = usersQuery.Where(u =>
-                            u.GroupMemberships.Any(gm => groupIds.Contains(gm.GroupId)));
+                            u.GroupMemberships.Any(gm => groupIds.Contains(gm.UserGroupId)));
                     }
                 }
                 break;

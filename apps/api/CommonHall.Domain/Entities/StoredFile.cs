@@ -2,7 +2,7 @@ using CommonHall.Domain.Common;
 
 namespace CommonHall.Domain.Entities;
 
-public sealed class StoredFile : BaseEntity
+public sealed class StoredFile : BaseEntity, ISoftDeletable
 {
     public string FileName { get; set; } = string.Empty;
     public string OriginalName { get; set; } = string.Empty;
@@ -13,6 +13,11 @@ public sealed class StoredFile : BaseEntity
     public Guid? CollectionId { get; set; }
     public Guid UploadedBy { get; set; }
     public string? AltText { get; set; }
+
+    // ISoftDeletable
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public Guid? DeletedBy { get; set; }
 
     // Navigation properties
     public FileCollection? Collection { get; set; }
