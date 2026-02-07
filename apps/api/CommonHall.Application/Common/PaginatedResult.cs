@@ -17,6 +17,29 @@ public sealed record PaginatedResult<T>
         };
 }
 
+public sealed record CursorPaginatedResult<T>
+{
+    public required List<T> Items { get; init; }
+    public string? NextCursor { get; init; }
+    public bool HasMore { get; init; }
+
+    public static CursorPaginatedResult<T> Create(List<T> items, int requestedSize, Func<T, string>? cursorSelector = null)
+    {
+        var hasMore = items.Count > requestedSize;
+        var resultItems = hasMore ? items.Take(requestedSize).ToList() : items;
+        var nextCursor = hasMore && cursorSelector != null && resultItems.Count > 0
+            ? cursorSelector(resultItems.Last())
+            : null;
+
+        return new CursorPaginatedResult<T>
+        {
+            Items = resultItems,
+            NextCursor = nextCursor,
+            HasMore = hasMore
+        };
+    }
+}
+
 public sealed record PaginationRequest
 {
     public int Page { get; init; } = 1;

@@ -1,5 +1,6 @@
 using CommonHall.Application.Interfaces;
 using CommonHall.Domain.Entities;
+using CommonHall.Infrastructure.BackgroundServices;
 using CommonHall.Infrastructure.Persistence;
 using CommonHall.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -58,6 +59,15 @@ public static class DependencyInjection
 
         // Content Authorization Service
         services.AddScoped<IContentAuthorizationService, ContentAuthorizationService>();
+
+        // Tag Service
+        services.AddScoped<ITagService, TagService>();
+
+        // View Count Service
+        services.AddScoped<IViewCountService, ViewCountService>();
+
+        // Background Services
+        services.AddHostedService<ScheduledPublishingService>();
 
         return services;
     }
