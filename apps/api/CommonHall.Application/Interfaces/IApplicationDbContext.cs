@@ -21,6 +21,10 @@ public interface IApplicationDbContext
     DbSet<StoredFile> StoredFiles { get; }
     DbSet<FileCollection> FileCollections { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<EmailTemplate> EmailTemplates { get; }
+    DbSet<EmailNewsletter> EmailNewsletters { get; }
+    DbSet<EmailRecipient> EmailRecipients { get; }
+    DbSet<EmailClick> EmailClicks { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

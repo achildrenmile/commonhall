@@ -33,6 +33,10 @@ public sealed class CommonHallDbContext : IdentityDbContext<User, IdentityRole<G
     public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
     public DbSet<FileCollection> FileCollections => Set<FileCollection>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+    public DbSet<EmailNewsletter> EmailNewsletters => Set<EmailNewsletter>();
+    public DbSet<EmailRecipient> EmailRecipients => Set<EmailRecipient>();
+    public DbSet<EmailClick> EmailClicks => Set<EmailClick>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

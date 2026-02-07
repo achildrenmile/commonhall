@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using CommonHall.Application.Interfaces;
 using CommonHall.Domain.Entities;
 using CommonHall.Infrastructure.BackgroundServices;
@@ -78,9 +79,33 @@ public static class DependencyInjection
         // Rule-Based Group Service
         services.AddScoped<IRuleBasedGroupService, RuleBasedGroupService>();
 
+        // Email Services
+        services.AddScoped<IEmailRenderer, EmailRenderer>();
+        services.AddScoped<INewsletterService, NewsletterService>();
+
+        // Email sending service - use SMTP for dev, SendGrid for prod
+        services.Configure<SmtpSettings>(configuration.GetSection("Smtp"));
+        services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
+
+        var useSendGrid = !string.IsNullOrEmpty(configuration["SendGrid:ApiKey"]);
+        if (useSendGrid)
+        {
+            services.AddHttpClient<IEmailSendingService, SendGridEmailService>();
+        }
+        else
+        {
+            services.AddScoped<IEmailSendingService, SmtpEmailService>();
+        }
+
+        // Email sending queue
+        services.AddSingleton(Channel.CreateUnbounded<NewsletterSendJob>(
+            new UnboundedChannelOptions { SingleReader = true }));
+
         // Background Services
         services.AddHostedService<ScheduledPublishingService>();
         services.AddHostedService<RuleBasedGroupRecalculationService>();
+        services.AddHostedService<EmailSendingBackgroundService>();
+        services.AddHostedService<ScheduledNewsletterService>();
 
         return services;
     }

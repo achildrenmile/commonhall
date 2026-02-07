@@ -13,6 +13,8 @@ import {
   Users,
   Settings,
   ChevronDown,
+  Mail,
+  Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/lib/auth-store';
@@ -52,6 +54,14 @@ const navigation: NavItem[] = [
       { title: 'Spaces', href: '/studio/spaces' },
       { title: 'Files', href: '/studio/files' },
       { title: 'Comments', href: '/studio/comments' },
+    ],
+  },
+  {
+    title: 'Communicate',
+    href: '/studio/communicate',
+    icon: Send,
+    children: [
+      { title: 'Newsletters', href: '/studio/email' },
     ],
   },
   {
