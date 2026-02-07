@@ -66,6 +66,12 @@ public static class DependencyInjection
         // View Count Service
         services.AddScoped<IViewCountService, ViewCountService>();
 
+        // File Storage Service
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
+        // File Validation Service
+        services.AddScoped<IFileValidationService, FileValidationService>();
+
         // Background Services
         services.AddHostedService<ScheduledPublishingService>();
 
