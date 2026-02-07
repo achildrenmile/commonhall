@@ -18,7 +18,7 @@ public record NewsSearchDocument
     public DateTimeOffset CreatedAt { get; init; }
     public DateTimeOffset UpdatedAt { get; init; }
     public required string Slug { get; init; }
-    public int ViewCount { get; init; }
+    public long ViewCount { get; init; }
     public object? VisibilityRule { get; init; }
     public string? TeaserImageUrl { get; init; }
 }
