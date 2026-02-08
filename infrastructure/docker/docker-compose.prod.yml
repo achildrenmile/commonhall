@@ -15,7 +15,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=commonhall;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
-      - Redis__ConnectionString=redis:6379
+      - ConnectionStrings__Redis=redis:6379
       - Elasticsearch__Url=http://elasticsearch:9200
       - Jwt__Secret=${JWT_SECRET}
       - Jwt__Issuer=${JWT_ISSUER:-commonhall}
