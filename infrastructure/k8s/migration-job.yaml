@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration
+  namespace: commonhall
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: mcr.microsoft.com/dotnet/sdk:10.0
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              cd /app/apps/api
+              dotnet tool install --global dotnet-ef
+              export PATH="$PATH:/root/.dotnet/tools"
+              dotnet restore CommonHall.Api
+              dotnet ef database update --project CommonHall.Infrastructure --startup-project CommonHall.Api
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: commonhall-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: commonhall-secrets
+                  key: POSTGRES_PASSWORD
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=postgres;Database=commonhall;Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD)"
+            - name: ConnectionStrings__Redis
+              value: "redis:6379"
+          volumeMounts:
+            - name: app-source
+              mountPath: /app
+      initContainers:
+        - name: clone-repo
+          image: alpine/git
+          command:
+            - /bin/sh
+            - -c
+            - |
+              git clone https://github.com/achildrenmile/commonhall.git /app
+          volumeMounts:
+            - name: app-source
+              mountPath: /app
+      volumes:
+        - name: app-source
+          emptyDir: {}
