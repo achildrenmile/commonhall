@@ -4,7 +4,15 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Workaround for .NET 10 SDK MSB3552 bug -->
+    <CoreBuildDependsOn>$(CoreBuildDependsOn.Replace(';GenerateSatelliteAssemblies;', ';'))</CoreBuildDependsOn>
+    <GenerateSatelliteAssembliesForCore>false</GenerateSatelliteAssembliesForCore>
   </PropertyGroup>
+
+  <!-- Explicitly remove all embedded resources to prevent SDK bug -->
+  <ItemGroup>
+    <EmbeddedResource Remove="@(EmbeddedResource)" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
