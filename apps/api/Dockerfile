@@ -23,6 +23,12 @@ COPY apps/api/CommonHall.Application/ ./CommonHall.Application/
 COPY apps/api/CommonHall.Domain/ ./CommonHall.Domain/
 COPY apps/api/CommonHall.Infrastructure/ ./CommonHall.Infrastructure/
 
+# Debug: List files in Infrastructure
+RUN echo "=== Files in Infrastructure ===" && \
+    find CommonHall.Infrastructure -name "*.cs" | head -20 && \
+    echo "=== Total CS files ===" && \
+    find CommonHall.Infrastructure -name "*.cs" | wc -l
+
 # Build and publish
 RUN dotnet publish CommonHall.Api/CommonHall.Api.csproj \
     -c Release \
