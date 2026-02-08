@@ -644,15 +644,16 @@ public sealed class ElasticsearchService : ISearchService
         // Index news articles
         var newsCount = await _dbContext.NewsArticles.CountAsync(cancellationToken);
         var newsProcessed = 0;
-        var newsQuery = _dbContext.NewsArticles
+        var newsBaseQuery = _dbContext.NewsArticles
             .Include(a => a.Channel).ThenInclude(c => c!.Space)
             .Include(a => a.Author)
             .Include(a => a.ArticleTags).ThenInclude(at => at.Tag)
             .Where(a => !a.IsDeleted)
             .OrderBy(a => a.Id);
 
-        await foreach (var batch in newsQuery.AsAsyncEnumerable().Chunk(batchSize).WithCancellation(cancellationToken))
+        for (var skip = 0; skip < newsCount; skip += batchSize)
         {
+            var batch = await newsBaseQuery.Skip(skip).Take(batchSize).ToListAsync(cancellationToken);
             foreach (var article in batch)
             {
                 await IndexNewsArticleAsync(article.Id, cancellationToken);
@@ -670,13 +671,14 @@ public sealed class ElasticsearchService : ISearchService
         // Index pages
         var pagesCount = await _dbContext.Pages.CountAsync(p => !p.IsDeleted, cancellationToken);
         var pagesProcessed = 0;
-        var pagesQuery = _dbContext.Pages
+        var pagesBaseQuery = _dbContext.Pages
             .Include(p => p.Space)
             .Where(p => !p.IsDeleted)
             .OrderBy(p => p.Id);
 
-        await foreach (var batch in pagesQuery.AsAsyncEnumerable().Chunk(batchSize).WithCancellation(cancellationToken))
+        for (var skip = 0; skip < pagesCount; skip += batchSize)
         {
+            var batch = await pagesBaseQuery.Skip(skip).Take(batchSize).ToListAsync(cancellationToken);
             foreach (var page in batch)
             {
                 await IndexPageAsync(page.Id, cancellationToken);
@@ -694,10 +696,11 @@ public sealed class ElasticsearchService : ISearchService
         // Index users
         var usersCount = await _dbContext.Users.CountAsync(cancellationToken);
         var usersProcessed = 0;
-        var usersQuery = _dbContext.Users.OrderBy(u => u.Id);
+        var usersBaseQuery = _dbContext.Users.OrderBy(u => u.Id);
 
-        await foreach (var batch in usersQuery.AsAsyncEnumerable().Chunk(batchSize).WithCancellation(cancellationToken))
+        for (var skip = 0; skip < usersCount; skip += batchSize)
         {
+            var batch = await usersBaseQuery.Skip(skip).Take(batchSize).ToListAsync(cancellationToken);
             foreach (var user in batch)
             {
                 await IndexUserAsync(user.Id, cancellationToken);
@@ -715,13 +718,14 @@ public sealed class ElasticsearchService : ISearchService
         // Index files
         var filesCount = await _dbContext.StoredFiles.CountAsync(f => !f.IsDeleted, cancellationToken);
         var filesProcessed = 0;
-        var filesQuery = _dbContext.StoredFiles
+        var filesBaseQuery = _dbContext.StoredFiles
             .Include(f => f.Collection)
             .Where(f => !f.IsDeleted)
             .OrderBy(f => f.Id);
 
-        await foreach (var batch in filesQuery.AsAsyncEnumerable().Chunk(batchSize).WithCancellation(cancellationToken))
+        for (var skip = 0; skip < filesCount; skip += batchSize)
         {
+            var batch = await filesBaseQuery.Skip(skip).Take(batchSize).ToListAsync(cancellationToken);
             foreach (var file in batch)
             {
                 await IndexFileAsync(file.Id, cancellationToken);
