@@ -21,8 +21,10 @@ public static class DependencyInjection
         // Database
         services.AddDbContext<CommonHallDbContext>(options =>
             options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(CommonHallDbContext).Assembly.FullName)));
+                    configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(CommonHallDbContext).Assembly.FullName))
+                .ConfigureWarnings(w => w.Ignore(
+                    Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<CommonHallDbContext>());
