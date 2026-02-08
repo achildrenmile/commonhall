@@ -2,9 +2,9 @@
 # Multi-stage build for .NET 10 application
 
 # =============================================================================
-# Stage 1: Build
+# Stage 1: Build (using Alpine variant)
 # =============================================================================
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 WORKDIR /src
 
