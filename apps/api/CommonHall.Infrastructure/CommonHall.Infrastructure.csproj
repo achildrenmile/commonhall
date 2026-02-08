@@ -6,21 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- Remove any glob patterns for embedded resources that might cause issues -->
-  <ItemGroup>
-    <EmbeddedResource Remove="**/*.resx" />
-  </ItemGroup>
-
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0-preview.7.25363.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0-preview.7.25363.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0-preview.7.25363.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0-preview.7.25363.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0-preview.7.25363.1" />
