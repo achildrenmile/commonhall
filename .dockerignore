@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.user
+*.suo
+
+# Build outputs
+**/bin
+**/obj
+
+# Node modules
+**/node_modules
+
+# Test results
+**/TestResults
+**/coverage
+
+# Logs
+*.log
+logs/
+
+# Local environment files
+**/appsettings.Development.json
+**/appsettings.Local.json
+.env
+.env.*
+
+# Misc
+Thumbs.db
+.DS_Store
