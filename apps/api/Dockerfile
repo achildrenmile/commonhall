@@ -23,11 +23,11 @@ COPY apps/api/CommonHall.Application/ ./CommonHall.Application/
 COPY apps/api/CommonHall.Domain/ ./CommonHall.Domain/
 COPY apps/api/CommonHall.Infrastructure/ ./CommonHall.Infrastructure/
 
-# Build and publish
-RUN dotnet publish CommonHall.Api/CommonHall.Api.csproj \
+# Build and publish (restore first to ensure all dependencies)
+RUN dotnet restore CommonHall.Api/CommonHall.Api.csproj && \
+    dotnet publish CommonHall.Api/CommonHall.Api.csproj \
     -c Release \
-    -o /app/publish \
-    --no-restore
+    -o /app/publish
 
 # =============================================================================
 # Stage 2: Runtime
