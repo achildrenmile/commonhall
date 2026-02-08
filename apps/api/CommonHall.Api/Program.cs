@@ -19,8 +19,8 @@ builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Seed database in development
-if (app.Environment.IsDevelopment())
+// Run migrations and seed database
+// Migrations run in all environments, seeding creates default admin user
 {
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
