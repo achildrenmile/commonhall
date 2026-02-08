@@ -35,7 +35,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<CommonHall
 /// </summary>
 internal class DesignTimeCurrentUserService : Application.Interfaces.ICurrentUserService
 {
-    public Guid? UserId => null;
+    public string? UserId => null;
     public string? Email => null;
     public bool IsAuthenticated => false;
 }
