@@ -2,9 +2,9 @@
 # Multi-stage build for .NET 10 application
 
 # =============================================================================
-# Stage 1: Build (using Alpine variant)
+# Stage 1: Build
 # =============================================================================
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /src
 
@@ -20,7 +20,7 @@ RUN dotnet restore CommonHall.Api/CommonHall.Api.csproj && \
 # =============================================================================
 # Stage 2: Runtime
 # =============================================================================
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 
 WORKDIR /app
 
