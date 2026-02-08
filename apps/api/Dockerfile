@@ -8,22 +8,10 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-preview AS build
 
 WORKDIR /src
 
-# Copy project files first for better layer caching
-COPY apps/api/CommonHall.Api/CommonHall.Api.csproj ./CommonHall.Api/
-COPY apps/api/CommonHall.Application/CommonHall.Application.csproj ./CommonHall.Application/
-COPY apps/api/CommonHall.Domain/CommonHall.Domain.csproj ./CommonHall.Domain/
-COPY apps/api/CommonHall.Infrastructure/CommonHall.Infrastructure.csproj ./CommonHall.Infrastructure/
+# Copy entire api folder at once
+COPY apps/api/ ./
 
-# Restore dependencies (using Api project which references all others)
-RUN dotnet restore CommonHall.Api/CommonHall.Api.csproj
-
-# Copy source code
-COPY apps/api/CommonHall.Api/ ./CommonHall.Api/
-COPY apps/api/CommonHall.Application/ ./CommonHall.Application/
-COPY apps/api/CommonHall.Domain/ ./CommonHall.Domain/
-COPY apps/api/CommonHall.Infrastructure/ ./CommonHall.Infrastructure/
-
-# Build and publish (restore first to ensure all dependencies)
+# Restore and build
 RUN dotnet restore CommonHall.Api/CommonHall.Api.csproj && \
     dotnet publish CommonHall.Api/CommonHall.Api.csproj \
     -c Release \

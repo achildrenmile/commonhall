@@ -4,14 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <EnableDefaultItems>true</EnableDefaultItems>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <!-- Disable default resource glob patterns that cause SDK issues -->
-  <PropertyGroup>
-    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-    <GenerateSatelliteAssembliesForCore>false</GenerateSatelliteAssembliesForCore>
   </PropertyGroup>
 
   <ItemGroup>
