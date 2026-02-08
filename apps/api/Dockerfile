@@ -11,6 +11,9 @@ WORKDIR /src
 # Copy entire api folder at once
 COPY apps/api/ ./
 
+# Clean obj/bin folders to avoid stale assets
+RUN find . -type d \( -name "obj" -o -name "bin" \) -exec rm -rf {} + 2>/dev/null || true
+
 # Restore and build
 RUN dotnet restore CommonHall.Api/CommonHall.Api.csproj && \
     dotnet publish CommonHall.Api/CommonHall.Api.csproj \
