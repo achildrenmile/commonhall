@@ -55,12 +55,12 @@ export function NewsFilters() {
         {channelsLoading ? (
           <Skeleton className="h-10 w-40" />
         ) : (
-          <Select value={channelSlug} onValueChange={(v) => updateFilter('channel', v)}>
+          <Select value={channelSlug || 'all'} onValueChange={(v) => updateFilter('channel', v === 'all' ? '' : v)}>
             <SelectTrigger className="w-40">
               <SelectValue placeholder="All Channels" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Channels</SelectItem>
+              <SelectItem value="all">All Channels</SelectItem>
               {channels?.map((channel) => (
                 <SelectItem key={channel.id} value={channel.slug}>
                   {channel.name}
@@ -74,12 +74,12 @@ export function NewsFilters() {
         {spacesLoading ? (
           <Skeleton className="h-10 w-40" />
         ) : (
-          <Select value={spaceSlug} onValueChange={(v) => updateFilter('space', v)}>
+          <Select value={spaceSlug || 'all'} onValueChange={(v) => updateFilter('space', v === 'all' ? '' : v)}>
             <SelectTrigger className="w-40">
               <SelectValue placeholder="All Spaces" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Spaces</SelectItem>
+              <SelectItem value="all">All Spaces</SelectItem>
               {spaces?.map((space) => (
                 <SelectItem key={space.id} value={space.slug}>
                   {space.name}

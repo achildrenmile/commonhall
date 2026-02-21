@@ -1,7 +1,7 @@
-# CommonHall — Enterprise Intranet & Employee Communication Platform
+# Infineon Developer Project Bootstrapper
 
 ## What Is This
-A full-featured enterprise intranet platform inspired by Staffbase. Multi-channel internal communications (web, mobile, email, SMS, digital signage). AI-powered content assistance, search, and analytics. Built as a monorepo.
+A code repository initialization and scaffolding platform for Infineon developers. Provides project templates, boilerplate generation, and standardized project setup workflows. AI-powered code generation and best-practice enforcement. Built as a monorepo.
 
 ## Tech Stack
 - **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui, TanStack Query
