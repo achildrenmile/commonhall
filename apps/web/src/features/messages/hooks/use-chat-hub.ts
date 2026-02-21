@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getAccessToken } from '@/lib/api-client';
 import type { Message } from '../types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 interface UseChatHubOptions {
   onReceiveMessage?: (message: Message) => void;

@@ -48,7 +48,7 @@ export function useSearchAnalytics(from: Date, to: Date) {
 }
 
 export function getExportUrl(type: 'overview' | 'search', from: Date, to: Date): string {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
   const params = new URLSearchParams({
     type,
     format: 'csv',

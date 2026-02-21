@@ -283,7 +283,7 @@ class AnalyticsClient {
         const blob = new Blob([JSON.stringify({ events })], {
           type: 'application/json',
         });
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
         navigator.sendBeacon(`${apiUrl}/api/v1/analytics/track`, blob);
       } else {
         // Use regular API client for async flush
